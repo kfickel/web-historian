@@ -52,7 +52,7 @@ exports.isUrlInList = function(url, callback) {
 };
 
 exports.addUrlToList = function(url, callback) {
-  if (!exports.isUrlInList(url, function(boolean) { console.log('URL in tolist',  url); return boolean; })) {
+  if (!exports.isUrlInList(url, function(boolean) { return boolean; })) {
     fs.appendFile(exports.paths.list, url, 'utf8', function append(err) {
       if (err) {
         throw err;
