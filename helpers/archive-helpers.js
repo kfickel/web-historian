@@ -1,6 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 var _ = require('underscore');
+var http = require('http');
 
 /*
  * You will need to reuse the same paths many times over in the course of this sprint.
@@ -26,18 +27,13 @@ exports.initialize = function(pathsObj) {
 // modularize your code. Keep it clean!
 
 exports.readListOfUrls = function(callback) {
-  console.log(exports.paths.list);
-  //read file of the archived site
-
   fs.readFile(exports.paths.list, 'utf8', function read(err, data) {
     if (err) {
       throw err;
     } else {
-      console.log('DATA in active helpersv 123 ', data.toString());
-      // console.log(exports.)
       callback(data.split('\n'));
     }
-    //console.log(res);
+
   });
 };
 
@@ -60,53 +56,42 @@ exports.addUrlToList = function(url, callback) {
         callback(url);
       }
     }); 
-  }   
-  
+  }    
 };
 
 exports.isUrlArchived = function(url, callback) {
   fs.exists(exports.paths.archivedSites + '/' + url, (exists) => {
-
     if (exists) {
-      
-      // console.log('in if- archived URL', exports.paths.archivedSites + '/' + url);
       callback(true);
     } else {
-    
-      // console.log('in else- archived URL', exports.paths.archivedSites + '/' + url);
       callback(false);
     }
-
   });
 };
 
 exports.downloadUrls = function(urls) {
-  var inputUrls = urls;
-  exports.readListOfUrls(function(arrayData) {
-    for (var i = 0; i < urls.length; i++) {
-      for (var j = 0; j < arrayData.length; j++) {
-        if (urls[i] === arrayData[j]) {
-          inputUrls.splice(i, 1);
-        }
+  for (var i = 0; i < urls.length; i++) {
+    var url = urls[i];
+    fs.exists(exports.paths.archivedSites + '/' + url, (exists) => {
+      if (!exists) {
+        fs.open(exports.paths.archivedSites + '/' + url, 'w', (err, fd) => {
+          var addHttp = 'http://' + url;
+          http.get(addHttp, function(res) {
+            res.setEncoding('utf8');
+            var rawData = '';
+            res.on('data', (chunk) => {
+              rawData += chunk;
+            });
+            res.on('end', () => {
+              fs.writeFile(exports.paths.archivedSites + '/' + url, rawData, (err) => {
+                if (err) {
+                  throw err;
+                }
+              });
+            });
+          });
+        });
       }
-    }
-    
-  });
-  for (var t = 0; t < inputUrls.length; t++) {
-    fs.open(exports.paths.archivedSites + '/' + inputUrls[t], 'w', (err, fd) => {
-      //GEt request
-      //parse the response
-      //write to open file
-      http.get(inputUrls[t]);
-      console.log('fd', fd);
-      if (err) {
-        throw err;
-      } else {
-        // readMyData(fd);
-      }
-      fs.close(fd);
     });
   }
-  
-  
 };
