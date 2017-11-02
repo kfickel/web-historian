@@ -67,11 +67,11 @@ exports.isUrlArchived = function(url, callback) {
 
     if (exists) {
       
-      console.log('in if- archived URL', exports.paths.archivedSites + '/' + url);
+      // console.log('in if- archived URL', exports.paths.archivedSites + '/' + url);
       callback(true);
     } else {
     
-      console.log('in else- archived URL', exports.paths.archivedSites + '/' + url);
+      // console.log('in else- archived URL', exports.paths.archivedSites + '/' + url);
       callback(false);
     }
 

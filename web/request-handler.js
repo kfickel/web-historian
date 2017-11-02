@@ -5,24 +5,18 @@ var httphelp = require('./http-helpers');
 
 var actions = {
   'GET': function(req, res) {
-    //is url archived
-    if (archive.isUrlArchived(req.url, function (boolean) {
+    archive.isUrlArchived(req.url, function (boolean) {
+      if (boolean) {
+        httphelp.serveAssets(res, req.url, function (data) {
+          res.writeHead(200, httphelp.headers);
+          res.end(data.toString());
+        });
+      } else {
+        res.writeHead(404, httphelp.headers);
+        res.end('{}');
+      }
       return boolean;
-    })) {
-      httphelp.serveAssets(res, req.url, function (data) {
-        console.log(req.url);
-        res.writeHead(200, httphelp.headers);
-        res.end(data.toString());
-      });
-        //if true then serve asset
-    }
-    //else if not archived
-      //404 error
-    // archive.readListOfUrls(function(url) {
-    //   res.writeHead(200, httphelp.headers);
-    //   console.log('OUTPUT ', url.toString());
-    //   res.end(url.toString());
-    // });
+    });
   }
 };
 
@@ -31,13 +25,6 @@ var clientPaths = {
 };
 
 exports.handleRequest = function (req, res) {
-  // res.end(archive.paths.list);
-  // archive.readListOfUrls(function(url) {
-  //   console.log(url.toString());
-  //   res.writeHead(200, httphelp.headers);
-  //   res.end(url.toString());
-    
-  // });
   if (actions[req.method]) {
     if (req.url === clientPaths[req.url]) {
       console.log('REQ URL ', req.url);
