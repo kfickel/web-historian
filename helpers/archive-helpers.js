@@ -33,6 +33,8 @@ exports.readListOfUrls = function(callback) {
     if (err) {
       throw err;
     } else {
+      console.log('DATA in active helpersv 123 ', data.toString());
+      // console.log(exports.)
       callback(data);
     }
     //console.log(res);
@@ -50,12 +52,12 @@ exports.isUrlInList = function(url, callback) {
 };
 
 exports.addUrlToList = function(url, callback) {
-  if (!exports.isUrlInList(url, function(boolean) { return boolean; })) {
+  if (!exports.isUrlInList(url, function(boolean) { console.log('URL in tolist',  url); return boolean; })) {
     fs.appendFile(exports.paths.list, url, 'utf8', function append(err) {
       if (err) {
         throw err;
       } else {
-        callback();
+        callback(url);
       }
     }); 
   }   
