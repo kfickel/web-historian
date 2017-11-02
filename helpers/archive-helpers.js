@@ -50,20 +50,32 @@ exports.isUrlInList = function(url, callback) {
 };
 
 exports.addUrlToList = function(url, callback) {
-//   fs.appendFile(exports.paths.list, url, 'utf8', function append(err) {
-//     if (err) {
-//       throw err;
-//     } else {
-//       callback()
-//     }
-
-// }) 
-    
-   
+  if (!exports.isUrlInList(url, function(boolean) { return boolean; })) {
+    fs.appendFile(exports.paths.list, url, 'utf8', function append(err) {
+      if (err) {
+        throw err;
+      } else {
+        callback();
+      }
+    }); 
+  }   
   
 };
 
 exports.isUrlArchived = function(url, callback) {
+  fs.exists(exports.paths.archivedSites + '/' + url, (exists) => {
+
+    if (exists) {
+      
+      console.log('in if- archived URL', exports.paths.archivedSites + '/' + url);
+      callback(true);
+    } else {
+    
+      console.log('in else- archived URL', exports.paths.archivedSites + '/' + url);
+      callback(false);
+    }
+
+  });
 };
 
 exports.downloadUrls = function(urls) {
