@@ -40,10 +40,27 @@ exports.readListOfUrls = function(callback) {
 };
 
 exports.isUrlInList = function(url, callback) {
+  exports.readListOfUrls(function(list) {
+    if (list.indexOf(url) > -1) {
+      callback(true);
+    } else {
+      callback(false);
+    }
+  });
 };
 
 exports.addUrlToList = function(url, callback) {
-  //fs.append
+//   fs.appendFile(exports.paths.list, url, 'utf8', function append(err) {
+//     if (err) {
+//       throw err;
+//     } else {
+//       callback()
+//     }
+
+// }) 
+    
+   
+  
 };
 
 exports.isUrlArchived = function(url, callback) {
