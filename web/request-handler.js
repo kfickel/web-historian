@@ -5,11 +5,24 @@ var httphelp = require('./http-helpers');
 
 var actions = {
   'GET': function(req, res) {
-    archive.readListOfUrls(function(url) {
-      res.writeHead(200, httphelp.headers);
-      console.log('OUTPUT ', url.toString());
-      res.end(url.toString());
-    });
+    //is url archived
+    if (archive.isUrlArchived(req.url, function (boolean) {
+      return boolean;
+    })) {
+      httphelp.serveAssets(res, req.url, function (data) {
+        console.log(req.url);
+        res.writeHead(200, httphelp.headers);
+        res.end(data.toString());
+      });
+        //if true then serve asset
+    }
+    //else if not archived
+      //404 error
+    // archive.readListOfUrls(function(url) {
+    //   res.writeHead(200, httphelp.headers);
+    //   console.log('OUTPUT ', url.toString());
+    //   res.end(url.toString());
+    // });
   }
 };
 
