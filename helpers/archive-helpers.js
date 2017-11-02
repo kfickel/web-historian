@@ -35,7 +35,7 @@ exports.readListOfUrls = function(callback) {
     } else {
       console.log('DATA in active helpersv 123 ', data.toString());
       // console.log(exports.)
-      callback(data);
+      callback(data.split('\n'));
     }
     //console.log(res);
   });
@@ -81,4 +81,32 @@ exports.isUrlArchived = function(url, callback) {
 };
 
 exports.downloadUrls = function(urls) {
+  var inputUrls = urls;
+  exports.readListOfUrls(function(arrayData) {
+    for (var i = 0; i < urls.length; i++) {
+      for (var j = 0; j < arrayData.length; j++) {
+        if (urls[i] === arrayData[j]) {
+          inputUrls.splice(i, 1);
+        }
+      }
+    }
+    
+  });
+  for (var t = 0; t < inputUrls.length; t++) {
+    fs.open(exports.paths.archivedSites + '/' + inputUrls[t], 'w', (err, fd) => {
+      //GEt request
+      //parse the response
+      //write to open file
+      http.get(inputUrls[t]);
+      console.log('fd', fd);
+      if (err) {
+        throw err;
+      } else {
+        // readMyData(fd);
+      }
+      fs.close(fd);
+    });
+  }
+  
+  
 };

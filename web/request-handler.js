@@ -30,8 +30,13 @@ var actions = {
       // body = Buffer.concat(body).toString();
       body = body.slice(4) + '\n';
       archive.addUrlToList(body, function(url) {
-        res.writeHead(302, httphelp.headers);
-        res.end();
+        httphelp.serveAssets(res, 'index.html', function(data) {
+          console.log('data ', data);
+          res.writeHead(302, httphelp.headers);
+          res.end(data.toString());
+        });
+        // res.writeHead(302, httphelp.headers);
+        // res.end();
       });
       console.log('BODY ', body);
     });
