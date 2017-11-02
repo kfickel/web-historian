@@ -26,12 +26,24 @@ exports.initialize = function(pathsObj) {
 // modularize your code. Keep it clean!
 
 exports.readListOfUrls = function(callback) {
+  console.log(exports.paths.list);
+  //read file of the archived site
+
+  fs.readFile(exports.paths.list, 'utf8', function read(err, data) {
+    if (err) {
+      throw err;
+    } else {
+      callback(data);
+    }
+    //console.log(res);
+  });
 };
 
 exports.isUrlInList = function(url, callback) {
 };
 
 exports.addUrlToList = function(url, callback) {
+  //fs.append
 };
 
 exports.isUrlArchived = function(url, callback) {
