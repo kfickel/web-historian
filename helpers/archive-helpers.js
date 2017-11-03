@@ -71,25 +71,27 @@ exports.isUrlArchived = function(url, callback) {
 
 exports.downloadUrls = function(urls) {
   for (var i = 0; i < urls.length; i++) {
-    var url = urls[i];
+    const url = urls[i];
     fs.exists(exports.paths.archivedSites + '/' + url, (exists) => {
       if (!exists) {
         fs.open(exports.paths.archivedSites + '/' + url, 'w', (err, fd) => {
           var addHttp = 'http://' + url;
-          http.get(addHttp, function(res) {
-            res.setEncoding('utf8');
-            var rawData = '';
-            res.on('data', (chunk) => {
-              rawData += chunk;
-            });
-            res.on('end', () => {
-              fs.writeFile(exports.paths.archivedSites + '/' + url, rawData, (err) => {
-                if (err) {
-                  throw err;
-                }
+          if (url !== '') {
+            http.get(addHttp, function(res) {
+              res.setEncoding('utf8');
+              var rawData = '';
+              res.on('data', (chunk) => {
+                rawData += chunk;
+              });
+              res.on('end', () => {
+                fs.writeFile(exports.paths.archivedSites + '/' + url, rawData, (err) => {
+                  if (err) {
+                    throw err;
+                  }
+                });
               });
             });
-          });
+          }
         });
       }
     });
